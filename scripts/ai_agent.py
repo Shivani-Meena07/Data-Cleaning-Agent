@@ -7,7 +7,7 @@ from langgraph.graph import StateGraph, END
 from pydantic import BaseModel
 
 # Load API key from the environment
-load_dotenv()
+load_dotenv(os.path.join(os.path.dirname(__file__), '..', '.env'))
 openai.api_key = os.getenv("OPENAI_API_KEY")
 
 if not openai.api_key:
