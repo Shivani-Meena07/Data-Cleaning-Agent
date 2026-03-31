@@ -41,27 +41,25 @@ class AIAgent:
 
     def process_data(self, df, batch_size=20):
         """Processes the DataFrame in batches using the LanggGraph agent."""
-        cleaned_responses = []
-        
-        for i in range(0, len(df), batch_size):
-            df_batch = df.iloc[i:i+batch_size]  # Process 20 rows at a time
+        try:
+            # Handle missing values
+            for column in df.columns:
+                if df[column].dtype in ['float64', 'int64']:  # Numeric columns
+                    df[column].fillna(df[column].mean(), inplace=True)
+                else:  # Text columns
+                    df[column].fillna(df[column].mode()[0] if len(df[column].mode()) > 0 else 'Unknown', inplace=True)
             
-            prompt = f"""
-            You are an AI Data Cleaning Agent. Analyse the dataset:
-
-            {df_batch.to_string()}
+            # Remove duplicates
+            df = df.drop_duplicates()
             
-            Identify the missing values, choose the best imputation strategy (mean, median, mode, or drop) for each column, remove duplicates and format text correctly.
-            Return the cleaned data as structured text."""
+            # Reset index
+            df = df.reset_index(drop=True)
             
-            state = CleaningState(input_text=prompt, structured_response="")
-            response = self.graph.invoke(state)
-            
-            if isinstance(response, dict):
-                response = CleaningState(**response)
-                
-            cleaned_responses.append(response.structured_response)  # store results
-            
-        return "\n".join(cleaned_responses)  # Combine all responses into a single string
+            # Return the cleaned DataFrame as CSV string
+            return df.to_csv(index=False)
+        except Exception as e:
+            print(f"Error in AI agent processing: {e}")
+            # Return the original dataframe as fallback
+            return df.to_csv(index=False)
             
         
