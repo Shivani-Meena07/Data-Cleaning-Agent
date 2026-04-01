@@ -10,7 +10,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 # FastAPI Backend URL (use env variable for deployment, fallback to localhost for development)
-FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8001")
+FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8000")
 
 # Streamlit UI Configuration
 st.set_page_config(page_title="AI-Powered Data Cleaning", layout="wide")
