@@ -7,10 +7,10 @@ services:
     startCommand: uvicorn scripts.backend:app --host 0.0.0.0 --port $PORT
     healthCheckPath: /docs
     envVars:
-      - key: OPENAI_API_KEY
-        scope: build,runtime
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: OPENAI_API_KEY
+        sync: false
 
   - type: web
     name: data-cleaning-ui
@@ -19,11 +19,9 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: streamlit run app/app.py --server.port=$PORT --server.address=0.0.0.0
     envVars:
-      - key: OPENAI_API_KEY
-        scope: build,runtime
       - key: PYTHONUNBUFFERED
         value: "1"
+      - key: OPENAI_API_KEY
+        sync: false
       - key: FASTAPI_URL
-        fromService:
-          name: data-cleaning-backend
-          property: url
+        value: https://data-cleaning-backend.onrender.com
