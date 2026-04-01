@@ -3,9 +3,14 @@ import requests
 import pandas as pd
 import json 
 from io import StringIO
+import os
+from dotenv import load_dotenv
 
-# FastAPI Backend URL
-FASTAPI_URL = "http://127.0.0.1:8000"
+# Load environment variables
+load_dotenv()
+
+# FastAPI Backend URL (use env variable for deployment, fallback to localhost for development)
+FASTAPI_URL = os.getenv("FASTAPI_URL", "http://127.0.0.1:8001")
 
 # Streamlit UI Configuration
 st.set_page_config(page_title="AI-Powered Data Cleaning", layout="wide")
@@ -34,7 +39,7 @@ if data_source == "CSV/Excel":
         else:
             df = pd.read_excel(uploaded_file)
             
-        st.write("### 🔍 Raw Data Preview")
+        st.write("### 🔍 Raw Data Preview" )
         st.dataframe(df)
         
         if st.button("Clean Data"):
