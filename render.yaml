@@ -5,11 +5,12 @@ services:
     plan: free
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn scripts.backend:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /docs
     envVars:
       - key: OPENAI_API_KEY
         scope: build,runtime
-      - key: PYTHON_VERSION
-        value: 3.11
+      - key: PYTHONUNBUFFERED
+        value: "1"
 
   - type: web
     name: data-cleaning-ui
@@ -20,3 +21,9 @@ services:
     envVars:
       - key: OPENAI_API_KEY
         scope: build,runtime
+      - key: PYTHONUNBUFFERED
+        value: "1"
+      - key: FASTAPI_URL
+        fromService:
+          name: data-cleaning-backend
+          property: url
