@@ -4,6 +4,7 @@ import pandas as pd
 import io
 import aiohttp
 from fastapi import FastAPI, UploadFile, File, Query, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from pydantic import BaseModel
 import requests
@@ -16,6 +17,15 @@ from data_ingestions import DataIngestion
 from data_cleaning import DataCleaning
 
 app = FastAPI()
+
+# Enable CORS for frontend communication
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Allow all origins (can be restricted to specific domains)
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize AI agent and rule based cleaner
 ai_agent = AIAgent()
