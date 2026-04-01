@@ -22,6 +22,17 @@ ai_agent = AIAgent()
 data_ingestion = DataIngestion()
 cleaner = DataCleaning()
 
+#--------Health Check Endpoint--------#
+@app.get("/")
+async def root():
+    """Health check endpoint"""
+    return {"status": "Backend is running!", "message": "Access the Streamlit UI at http://localhost:8501"}
+
+@app.get("/health")
+async def health():
+    """Health check endpoint"""
+    return {"status": "healthy"}
+
 #--------CSV/Excel Cleaning Endpoint--------#
 @app.post("/clean-data")
 async def clean_data(file: UploadFile = File(...)):
